@@ -18,7 +18,7 @@ public class SimpleTicketsBank implements TicketsBank {
         return tickets.get(ticketId);
     }
 
-    public void deleteTicket(int ticketId) {
-        tickets.remove(ticketId);
+    public Ticket deleteTicket(int ticketId) {
+        return tickets.remove(ticketId);
     }
 }

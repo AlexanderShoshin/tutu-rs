@@ -1,9 +1,5 @@
 package shoshin.alex.tuturs.controllers;
 
-import java.util.GregorianCalendar;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,25 +24,14 @@ public class TerminalServiceController {
     @Autowired
     TicketsBank ticketsBank;
     
-    @PostConstruct
-    public void init() {
-        Passenger passenger = new Passenger("Alexander", "Shoshin", "", new GregorianCalendar(1987, 05, 16));
-        Ticket ticket = new Ticket();
-        ticket.setDeparturePoint("Tver");
-        ticket.setDestinationPoint("Oslo");
-        ticket.setPassenger(passenger);
-        ticket.setPrice(TicketCalculator.getDefaultPrice());
-        ticketsBank.addTicket(ticket);
-    }
-    
-    @RequestMapping(value = "/reservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(value = "/ticket", method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
-    public ResponseEntity<Integer> reserveTicket(@RequestBody ReservationData reservationData) {
+    public ResponseEntity<String> reserveTicket(@RequestBody ReservationData reservationData) {
         Passenger passenger = new Passenger(reservationData.getPassengerName(),
                                             reservationData.getPassengerSurname(),
                                             reservationData.getPassengerPatronymic(),
                                             reservationData.getPassengerBirthDate());
-        Ticket ticket = new Ticket();
+        Ticket ticket = new Ticket(Ticket.nextUniqueId());
         ticket.setPassenger(passenger);
         ticket.setDeparturePoint(reservationData.getDeparturePoint());
         ticket.setDestinationPoint(reservationData.getDestinationPoint());
@@ -55,7 +40,7 @@ public class TerminalServiceController {
         ticket.setPrice(TicketCalculator.getDefaultPrice());
         ticketsBank.addTicket(ticket);
         
-        return new ResponseEntity<>(ticket.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(((Integer) ticket.getId()).toString(), HttpStatus.OK);
     }
     
     @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
@@ -64,11 +49,12 @@ public class TerminalServiceController {
         Ticket ticket = ticketsBank.getTicket(ticketId);
         if (ticket != null) {
             return new ResponseEntity<>(ticket, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
-    @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<?> updateTicketStatus(@PathVariable("ticketId") int ticketId, @RequestBody TicketStatus status) {
         try {
             changeTicketStatus(ticketId, status);
@@ -90,7 +76,11 @@ public class TerminalServiceController {
     
     @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> returnTicket(@PathVariable("ticketId") int ticketId) {
-        ticketsBank.deleteTicket(ticketId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Ticket ticket = ticketsBank.deleteTicket(ticketId);
+        if (ticket != null) {
+            return new ResponseEntity<>(ticket, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
