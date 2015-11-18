@@ -1,6 +1,6 @@
 package shoshin.alex.tuturs.data;
 
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,13 +18,21 @@ public class Ticket {
     private Passenger passenger;
     
     public Ticket() {
-        lastId++;
-        id = lastId;
         status = TicketStatus.RESERVED;
+    }
+    public Ticket(int id) {
+        this();
+        this.id = id;
+    }
+    public static int nextUniqueId() {
+        return ++lastId;
     }
     
     public int getId() {
         return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
     public String getDestinationPoint() {
         return destinationPoint;
@@ -67,5 +75,17 @@ public class Ticket {
     }
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+    @Override
+    public String toString() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm");
+        return "ticket id - " + id
+                + ", " + departurePoint
+                + " - " + destinationPoint
+                + ", departure time - " + formatter.format(departureTime.getTime())
+                + ", destination time - " + formatter.format(destinationTime.getTime())
+                + ", passenger - " + passenger
+                + ", price - " + price
+                + ", status - " + status;
     }
 }

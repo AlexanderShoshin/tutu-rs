@@ -13,7 +13,7 @@
      
     <mvc:annotation-driven />
     <context:component-scan base-package="shoshin.alex.tuturs" />
-    <!-- 
+    
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix">
             <value>/WEB-INF/</value>
@@ -22,6 +22,6 @@
             <value>.jsp</value>
         </property>
     </bean>
-     -->
+    
     <bean name="defaultTicketsBank" class="shoshin.alex.tuturs.data.SimpleTicketsBank" />
 </beans>

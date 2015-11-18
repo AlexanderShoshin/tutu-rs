@@ -4,6 +4,10 @@ public class Price {
     private int count;
     private Currency currency;
     
+    public Price() {
+        
+    }
+    
     public Price(int count, Currency currency) {
         this.count = count;
         this.currency = currency;
@@ -23,5 +27,10 @@ public class Price {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+    
+    @Override
+    public String toString() {
+        return count + " " + currency;
     }
 }
