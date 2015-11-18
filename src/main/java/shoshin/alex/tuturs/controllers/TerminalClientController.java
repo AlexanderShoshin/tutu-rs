@@ -90,12 +90,17 @@ public class TerminalClientController {
         
         return getTerminalPage(model);
     }
-    /*
+    
     @RequestMapping(value = "/terminal", params = {"returnTicket"})
     public String returnTicket(Model model, @RequestParam(value = "returnTicket") int ticketId) {
+        String url = ticketServiceUri + "ticket/" + ticketId;
+        
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(url);
+        
         return getTerminalPage(model);
     }
-    */
+    
     @RequestMapping(value = "/terminal")
     public String getTerminalPage(Model model) {
         return "terminal";
