@@ -68,10 +68,10 @@ public class TerminalServiceController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
-    @RequestMapping(value = "/ticket/{ticketId}/pay", method = RequestMethod.POST)
-    public ResponseEntity<?> payForTicket(@PathVariable("ticketId") int ticketId) {
+    @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateTicketStatus(@PathVariable("ticketId") int ticketId, @RequestBody TicketStatus status) {
         try {
-            changeTicketStatus(ticketId, TicketStatus.PAID);
+            changeTicketStatus(ticketId, status);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NullPointerException exc) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -80,12 +80,12 @@ public class TerminalServiceController {
         }
     }
     
-    private void changeTicketStatus(int ticketId, TicketStatus status) throws ChangeStatusException {
+    private void changeTicketStatus(int ticketId, TicketStatus newStatus) throws ChangeStatusException {
         Ticket ticket = ticketsBank.getTicket(ticketId);
-        if (ticket.getStatus().equals(status)) {
+        if (ticket.getStatus().equals(newStatus)) {
             throw new ChangeStatusException();
         }
-        ticket.setStatus(TicketStatus.PAID);
+        ticket.setStatus(newStatus);
     }
     
     @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.DELETE)

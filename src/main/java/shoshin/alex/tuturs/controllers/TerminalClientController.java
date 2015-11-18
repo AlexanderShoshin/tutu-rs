@@ -1,10 +1,5 @@
 package shoshin.alex.tuturs.controllers;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import shoshin.alex.tuturs.data.Ticket;
+import shoshin.alex.tuturs.data.TicketStatus;
 
 @Controller
 public class TerminalClientController {
-    private static final String ticketServiseUri = "http://localhost:8081/tutu-rs/";
+    private static final String ticketServiceUri = "http://localhost:8081/tutu-rs/";
     /*
     @RequestMapping(value = "/terminal", params = {"name",
                                                    "surname",
@@ -76,20 +72,25 @@ public class TerminalClientController {
     */
     @RequestMapping(value = "/terminal", params = {"getTicket"})
     public String getTicket(Model model, @RequestParam(value = "getTicket") int ticketId) {
-        String uri = ticketServiseUri + "ticket/" + ticketId;
+        String url = ticketServiceUri + "ticket/" + ticketId;
         
         RestTemplate restTemplate = new RestTemplate();
-        Ticket result = restTemplate.getForObject(uri, Ticket.class);
+        Ticket result = restTemplate.getForObject(url, Ticket.class);
         model.addAttribute("resultInfo", result);
         
         return getTerminalPage(model);
     }
-    /*
+    
     @RequestMapping(value = "/terminal", params = {"payForTicket"})
     public String payForTicket(Model model, @RequestParam(value = "payForTicket") int ticketId) {
+        String url = ticketServiceUri + "ticket/" + ticketId;
+        
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(url, TicketStatus.PAID);
+        
         return getTerminalPage(model);
     }
-    
+    /*
     @RequestMapping(value = "/terminal", params = {"returnTicket"})
     public String returnTicket(Model model, @RequestParam(value = "returnTicket") int ticketId) {
         return getTerminalPage(model);
