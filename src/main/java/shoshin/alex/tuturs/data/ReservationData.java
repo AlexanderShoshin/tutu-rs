@@ -2,6 +2,9 @@ package shoshin.alex.tuturs.data;
 
 import java.util.Calendar;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "reresentationData")
 public class ReservationData {
     private String destinationPoint;
     private String departurePoint;
