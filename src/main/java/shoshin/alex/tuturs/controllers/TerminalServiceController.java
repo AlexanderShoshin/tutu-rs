@@ -3,7 +3,6 @@ package shoshin.alex.tuturs.controllers;
 import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,5 +71,11 @@ public class TerminalServiceController {
             throw new ChangeStatusException();
         }
         ticket.setStatus(TicketStatus.PAID);
+    }
+    
+    @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> returnTicket(@PathVariable("ticketId") int ticketId) {
+        ticketsBank.deleteTicket(ticketId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
