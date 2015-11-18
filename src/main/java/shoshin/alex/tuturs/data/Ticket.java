@@ -1,6 +1,5 @@
 package shoshin.alex.tuturs.data;
 
-import java.io.Serializable;
 import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,5 +66,16 @@ public class Ticket {
     }
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+    @Override
+    public String toString() {
+        return "ticket number - " + id
+                + ", " + departurePoint
+                + " - " + destinationPoint
+                + ", departure time - " + departureTime
+                + ", destination time - " + destinationTime
+                + ", passenger - " + passenger
+                + ", price - " + price
+                + ", status - " + status;
     }
 }

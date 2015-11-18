@@ -9,9 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+
+import shoshin.alex.tuturs.data.Ticket;
 
 @Controller
 public class TerminalClientController {
+    private static final String ticketServiseUri = "http://localhost:8081/tutu-rs/";
+    /*
     @RequestMapping(value = "/terminal", params = {"name",
                                                    "surname",
                                                    "patronymic",
@@ -39,7 +44,7 @@ public class TerminalClientController {
                               @RequestParam int destinationYear,
                               @RequestParam int destinationHours,
                               @RequestParam int destinationMinutes) throws DatatypeConfigurationException {
-        /*
+        
         String uri = "http://localhost/tutu-rs/res";
         ReservationData reservationData = new ReservationData();
         reservationData.setPassengerName(name);
@@ -55,11 +60,9 @@ public class TerminalClientController {
         restTemplate.put(uri, reservationData);
         System.out.println("after");
         
-        */
-        /*
         model.addAttribute("resultInfo", "ticket number " + ticketId + " reserved to " + name + " " + surname);
         model.addAttribute("ticketId", ticketId);
-        */
+        
         return getTerminalPage(model);
     }
     
@@ -70,12 +73,18 @@ public class TerminalClientController {
     private Calendar newDate(int year, int month, int day, int hour, int minutes) {
         return new GregorianCalendar(year, month, day, hour, minutes);
     }
-    
+    */
     @RequestMapping(value = "/terminal", params = {"getTicket"})
     public String getTicket(Model model, @RequestParam(value = "getTicket") int ticketId) {
+        String uri = ticketServiseUri + "ticket/" + ticketId;
+        
+        RestTemplate restTemplate = new RestTemplate();
+        Ticket result = restTemplate.getForObject(uri, Ticket.class);
+        model.addAttribute("resultInfo", result);
+        
         return getTerminalPage(model);
     }
-    
+    /*
     @RequestMapping(value = "/terminal", params = {"payForTicket"})
     public String payForTicket(Model model, @RequestParam(value = "payForTicket") int ticketId) {
         return getTerminalPage(model);
@@ -85,7 +94,7 @@ public class TerminalClientController {
     public String returnTicket(Model model, @RequestParam(value = "returnTicket") int ticketId) {
         return getTerminalPage(model);
     }
-    
+    */
     @RequestMapping(value = "/terminal")
     public String getTerminalPage(Model model) {
         return "terminal";

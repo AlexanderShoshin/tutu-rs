@@ -50,4 +50,9 @@ public class Passenger {
     public void setBirthDate(Calendar birthDate) {
         this.birthDate = birthDate;
     }
+    
+    @Override
+    public String toString() {
+        return name + " " + surname;
+    }
 }
