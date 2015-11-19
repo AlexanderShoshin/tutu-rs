@@ -7,6 +7,7 @@ class TicketResponceMessanger implements ResponseMessanger {
     
     public <T> String generateGetMessage(ResponseEntity<T> response, int ticketId) {
         String message = "";
+//        опять же это enum. Его можно сранивать по ==
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             message = response.getBody().toString();
         } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {

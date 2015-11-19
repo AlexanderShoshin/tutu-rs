@@ -39,10 +39,12 @@ public class TerminalServiceController {
         ticket.setDestinationTime(reservationData.getDestinationTime());
         ticket.setPrice(TicketCalculator.getDefaultPrice());
         ticketsBank.addTicket(ticket);
-        
+
+//        тут нет нужды в ResponseEntity. Это вещь удобная, но загромождает чтение. Можно просто возвращать id и тем более не конвертить его в строку
         return new ResponseEntity<>(((Integer) ticket.getId()).toString(), HttpStatus.OK);
     }
-    
+
+    //    коментарий ко всем: если в PathVariable имя переменной совпадает с PathVariable то явно имя указыать не надо
     @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public ResponseEntity<Ticket> getTicket(@PathVariable("ticketId") int ticketId) {
@@ -53,7 +55,8 @@ public class TerminalServiceController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
+//    тут тоже можно возвращать String
     @RequestMapping(value = "/ticket/{ticketId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<?> updateTicketStatus(@PathVariable("ticketId") int ticketId, @RequestBody TicketStatus status) {
         try {

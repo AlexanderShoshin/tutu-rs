@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+// одни статик методы. В принципе это приемлемо для небольших классов хелперов, но для лушей масштабируемости и тестируемости стоит делать из них полноценные сервиса.
+// Сейчас твое приложение заточено под один тип HttpHeaders. А если ты захочень его поменять придется много переписывать.
 public class ServiceRequest {
     public static <T, E> ResponseEntity<E> doRequest(String url, HttpMethod method, T requestContent, String contentType, Map<String, Integer> params, Class<E> responseType) {
         ResponseEntity<E> responseEntity;

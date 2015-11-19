@@ -24,6 +24,8 @@ public class Ticket {
         this();
         this.id = id;
     }
+
+//    уже лучше )) но коментарий относительно ws еще в силе
     public static int nextUniqueId() {
         return ++lastId;
     }
