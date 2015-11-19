@@ -23,5 +23,6 @@
         </property>
     </bean>
     
-    <bean name="defaultTicketsBank" class="shoshin.alex.tuturs.data.SimpleTicketsBank" />
+    <bean class="shoshin.alex.tuturs.data.SimpleTicketsBank" />
+    <bean class="shoshin.alex.tuturs.controllers.TicketResponceMessanger" />
 </beans>

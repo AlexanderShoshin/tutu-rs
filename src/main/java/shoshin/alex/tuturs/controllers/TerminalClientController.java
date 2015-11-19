@@ -4,8 +4,8 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +22,8 @@ import shoshin.alex.tuturs.utils.ServiceRequest;
 public class TerminalClientController {
     private static final String ticketServiceUrl = "http://localhost:8081/tutu-rs/ticket/";
     private static final String ticketUrl = ticketServiceUrl + "{id}";
+    @Autowired
+    private ResponseMessanger messanger;
     
     @RequestMapping(value = "/terminal",
                     params = {"name",
@@ -78,22 +80,12 @@ public class TerminalClientController {
                                                                    HttpMethod.GET,
                                                                    ServiceRequest.getTicketRequestParams(ticketId),
                                                                    Ticket.class);
-        String message = generateGetResponseMessage(response, ticketId);
+        String message = messanger.generateGetMessage(response, ticketId);
         
         model.addAttribute("resultInfo", message);
         model.addAttribute("ticketId", ticketId);
         
         return getTerminalPage(model);
-    }
-    
-    private String generateGetResponseMessage(ResponseEntity<Ticket> response, int ticketId) {
-        String message = "";
-        if (response.getStatusCode().equals(HttpStatus.OK)) {
-            message = response.getBody().toString();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            message = "ticket " + ticketId + " does not exist";
-        }
-        return message;
     }
     
     @RequestMapping(value = "/terminal", params = {"payForTicket"})
@@ -104,24 +96,12 @@ public class TerminalClientController {
                                                               "application/xml",
                                                               ServiceRequest.getTicketRequestParams(ticketId));
         
-        String message = generatePayResponseMessage(response, ticketId);
+        String message = messanger.generateUpdateMessage(response, ticketId);
         
         model.addAttribute("resultInfo", message);
         model.addAttribute("ticketId", ticketId);
         
         return getTerminalPage(model);
-    }
-    
-    private String generatePayResponseMessage(ResponseEntity<?> response, int ticketId) {
-        String message = "";
-        if (response.getStatusCode().equals(HttpStatus.OK)) {
-            message = "ticket " + ticketId + " has been paid successfully";
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_MODIFIED)) {
-            message = "ticket " + ticketId + " is already paid";
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            message = "ticket " + ticketId + " does not exist";
-        }
-        return message;
     }
     
     @RequestMapping(value = "/terminal", params = {"returnTicket"})
@@ -129,22 +109,12 @@ public class TerminalClientController {
         ResponseEntity<?> response = ServiceRequest.doRequest(ticketUrl,
                                                               HttpMethod.DELETE,
                                                               ServiceRequest.getTicketRequestParams(ticketId));
-        String message = generateDeleteResponseMessage(response, ticketId);
+        String message = messanger.generateDeleteMessage(response, ticketId);
         
         model.addAttribute("resultInfo", message);
         model.addAttribute("ticketId", ticketId);
         
         return getTerminalPage(model);
-    }
-    
-    private String generateDeleteResponseMessage(ResponseEntity<?> response, int ticketId) {
-        String message = "";
-        if (response.getStatusCode().equals(HttpStatus.OK)) {
-            message = "ticket " + ticketId + " has been returned successfully";
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            message = "ticket " + ticketId + " does not exist";
-        }
-        return message;
     }
     
     @RequestMapping(value = "/terminal")
